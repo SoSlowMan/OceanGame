@@ -64,9 +64,9 @@ public class PlayerController : MonoBehaviour
         float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime; // TODO: rewrite to AddForce
         float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime; // TODO: rewrite to AddForce or something
 
-        transform.Translate(0, 0, translation);
+        //transform.Translate(0, 0, translation);
 
-        transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation, Mathf.Clamp(transform.rotation.z, -10f, 10f));
+        //transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation, Mathf.Clamp(transform.rotation.z, -10f, 10f));
     }
 
     private void Forward()
@@ -74,7 +74,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(forwardKey))
         {
             //добавить ускорение
-            transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
+            //transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
+            rb.AddForce(Vector3.back, ForceMode.Acceleration);
+            
         }
     }
     
@@ -83,7 +85,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(backKey))
         {
             //добавить ускорение
-            transform.position += Vector3.forward * speed * Time.deltaTime;
+            //transform.position += Vector3.forward * speed * Time.deltaTime;
+            rb.AddForce(Vector3.forward, ForceMode.Acceleration);
         }
     }
     private void TurnLeft()
