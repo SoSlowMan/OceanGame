@@ -1,3 +1,4 @@
+//using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,26 +9,175 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] float rotationSpeed;
+    [SerializeField] float rotationSpeedDefault = 60;
+    [SerializeField] float rotationSpeedDrift = 120;
     [SerializeField] float speed;
+    [SerializeField] float maxSpeed;
+    [SerializeField] float brakeSpeed;
+    [SerializeField] MovementState state;
+    [SerializeField] enum MovementState
+    {
+        idle,
+        sailing,
+        turningRight,
+        turningLeft,
+        driftingRight,
+        driftingLeft,
+        air //?
+    }
+
+    [Header("Keys")]
+    [SerializeField] KeyCode driftKey = KeyCode.LeftShift;
+    [SerializeField] KeyCode brakeKey = KeyCode.Space;
+    [SerializeField] KeyCode forwardKey = KeyCode.W;
+    [SerializeField] KeyCode backKey = KeyCode.S;
+    [SerializeField] KeyCode leftKey = KeyCode.A;
+    [SerializeField] KeyCode rightKey = KeyCode.D;
 
     private void Awake()
     {
         instance = this;
     }
 
+    void Start()
+    {
+        rb.maxLinearVelocity = maxSpeed;
+    }
+
     // Update is called once per frame
     void Update()
     {
         Controls();
+        Drift();
+        StateHandler();
+        Debug.Log(state);
+        Debug.Log(rb.velocity);
     }
 
     private void Controls()
     {
-        float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime;
-        float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime;
+
+        //Forward();
+        //Backward();
+        //TurnLeft();
+        //TurnRight();
+        float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime; // TODO: rewrite to AddForce
+        float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime; // TODO: rewrite to AddForce or something
 
         transform.Translate(0, 0, translation);
 
-        transform.Rotate(0, rotation, 0);
+        transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation, Mathf.Clamp(transform.rotation.z, -10f, 10f));
+    }
+
+    private void Forward()
+    {
+        if (Input.GetKey(forwardKey))
+        {
+            //добавить ускорение
+            transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
+        }
+    }
+    
+    private void Backward()
+    {
+        if (Input.GetKey(backKey))
+        {
+            //добавить ускорение
+            transform.position += Vector3.forward * speed * Time.deltaTime;
+        }
+    }
+    private void TurnLeft()
+    {
+        float rotation = -1;
+        if (Input.GetKey(leftKey))
+        {
+            transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation * rotationSpeed * Time.deltaTime, Mathf.Clamp(transform.rotation.z, -10f, 10f));
+        }
+    }
+    
+    private void TurnRight()
+    {
+        float rotation = 1;
+        if (Input.GetKey(rightKey))
+        {
+            transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation * rotationSpeed * Time.deltaTime, Mathf.Clamp(transform.rotation.z, -10f, 10f));
+        }
+    }
+
+    private void Drift()
+    {
+        if (Input.GetKey(driftKey))
+        {
+            rotationSpeed = rotationSpeedDrift;
+        }
+        else rotationSpeed = rotationSpeedDefault;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "IslandTrigger")
+        {
+
+        }
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.transform.tag == "Wall")
+        {
+            rb.velocity = Vector3.zero;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.tag == "Wall")
+        {
+            rb.gameObject.SetActive(true);
+        }
+
+        if (collision.transform.tag == "IslandTrigger")
+        {
+
+        }
+    }
+
+    private void StateHandler()
+    {
+        // Idle
+        if (rb.velocity == Vector3.zero)
+        {
+            state = MovementState.idle;
+        }
+        // Sailing
+        if (rb.velocity != Vector3.zero)
+        {
+            state = MovementState.sailing;
+        }
+        // TurningRight 
+        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D))) // TODO: better key selector
+        {
+            state = MovementState.turningRight;
+        }
+        // turningLeft
+        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)))
+        {
+            state = MovementState.turningLeft;
+        }
+        // driftingRight
+        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D)) && Input.GetKey(driftKey))
+        {
+            state = MovementState.driftingRight;
+        }
+        // driftingLeft
+        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)) && Input.GetKey(driftKey))
+        {
+            state = MovementState.driftingLeft;
+        }
+        // Air mode??
+        //else
+        //{
+        //    state = MovementState.air;
+        //}
     }
 }

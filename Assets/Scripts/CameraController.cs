@@ -9,12 +9,15 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        camPos = new Vector3(0, 29.6f, 10.4f);
-        camRot = new Vector3(60f, 180f, 0f);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        FollowPlayer();
+    }
+
+    private void FollowPlayer()
     {
         cam.transform.position = PlayerController.instance.transform.position + camPos;
         cam.transform.rotation.SetEulerAngles(camRot);
