@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         Drift();
         StateHandler();
         Debug.Log(state);
-        Debug.Log(rb.velocity);
+        //Debug.Log(rb.velocity);
     }
 
     private void Controls()
