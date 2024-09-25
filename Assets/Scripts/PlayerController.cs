@@ -1,6 +1,6 @@
 //using System.Numerics;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode backKey = KeyCode.S;
     [SerializeField] KeyCode leftKey = KeyCode.A;
     [SerializeField] KeyCode rightKey = KeyCode.D;
+    [SerializeField] InputAction.CallbackContext action;
 
     private void Awake()
     {
@@ -47,37 +48,48 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Controls();
+        Controls(action);
         Drift();
         StateHandler();
-        Debug.Log(state);
+        //Debug.Log(state);
         //Debug.Log(rb.velocity);
     }
 
-    private void Controls()
+    public void Controls(InputAction.CallbackContext context)
     {
 
-        //Forward();
+        MovingVert(context);
         //Backward();
         //TurnLeft();
         //TurnRight();
-        float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime; // TODO: rewrite to AddForce
-        float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime; // TODO: rewrite to AddForce or something
+        //float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime; // TODO: rewrite to AddForce
+        //float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime; // TODO: rewrite to AddForce or something
 
         //transform.Translate(0, 0, translation);
 
         //transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation, Mathf.Clamp(transform.rotation.z, -10f, 10f));
     }
 
-    private void Forward()
+    private void MovingVert(InputAction.CallbackContext context)
     {
-        if (Input.GetKey(forwardKey))
+        if (context.performed)
         {
-            //добавить ускорение
-            //transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
-            rb.AddForce(Vector3.back, ForceMode.Acceleration);
-            
+            print("Moving performed");
         }
+        else if (context.started)
+        {
+            print("Moving started");
+        }
+        else if (context.canceled)
+        {
+            print("Moving canceled");
+        }
+        //if (Input.GetKey(forwardKey))
+        //{
+        //    //добавить ускорение
+        //    //transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
+        //    rb.AddForce(Vector3.back, ForceMode.Acceleration);
+        //}
     }
     
     private void Backward()
