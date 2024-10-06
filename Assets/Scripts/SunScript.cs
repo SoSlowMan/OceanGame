@@ -28,7 +28,8 @@ public class SunScript : MonoBehaviour
     {
         speedSun += Time.deltaTime / time;
         sun.color = Color.Lerp(colors[currentColorIndex], colors[nextColorIndex], speedSun);
-        transform.Rotate(Vector3.right, Time.deltaTime / 2);
+        //transform.Rotate(Vector3.right, Time.deltaTime / 2); only works when time = 360
+        transform.Rotate(Vector3.right, 15f * Time.deltaTime); // coef. 15!!!
 
         if (speedSun >= 1f)
         {

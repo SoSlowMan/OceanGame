@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Rigidbody rb;
     public static PlayerController instance;
 
     [Header("Movement")]
@@ -24,6 +23,7 @@ public class PlayerController : MonoBehaviour
         driftingLeft,
         air //?
     }
+    [SerializeField] PlayerInput playerInput;
 
     [Header("Keys")]
     [SerializeField] KeyCode driftKey = KeyCode.LeftShift;
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        rb.maxLinearVelocity = maxSpeed;
+        playerInput = GetComponent<PlayerInput>();
     }
 
     // Update is called once per frame
@@ -49,24 +49,13 @@ public class PlayerController : MonoBehaviour
     {
         Controls(action);
         Drift();
-        StateHandler();
-        //Debug.Log(state);
-        //Debug.Log(rb.velocity);
+        //Movement(action);
+        //StateHandler();
     }
 
     public void Controls(InputAction.CallbackContext context)
     {
-
         MovingVert(context);
-        //Backward();
-        //TurnLeft();
-        //TurnRight();
-        //float translation = Input.GetAxis("Vertical") * -speed * Time.deltaTime; // TODO: rewrite to AddForce
-        //float rotation = Input.GetAxis("Horizontal") * rotationSpeed * Time.deltaTime; // TODO: rewrite to AddForce or something
-
-        //transform.Translate(0, 0, translation);
-
-        //transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation, Mathf.Clamp(transform.rotation.z, -10f, 10f));
     }
 
     private void MovingVert(InputAction.CallbackContext context)
@@ -83,21 +72,28 @@ public class PlayerController : MonoBehaviour
         {
             print("Moving canceled");
         }
-        //if (Input.GetKey(forwardKey))
-        //{
-        //    //добавить ускорение
-        //    //transform.localPosition += Vector3.forward * -speed * Time.deltaTime;
-        //    rb.AddForce(Vector3.back, ForceMode.Acceleration);
-        //}
     }
-    
+
+    //private void Movement(InputAction.CallbackContext context)
+    //{
+    //    speed = 8 * Time.deltaTime;
+    //    if (context.performed)
+    //    {
+    //        float move = context.action;
+    //        Vector3 positionNow = transform.position;
+    //        positionNow.x += move * speed;
+    //        transform.position = positionNow;
+    //        print("Moving performed");
+    //    }
+    //}
+
     private void Backward()
     {
         if (Input.GetKey(backKey))
         {
             //добавить ускорение
             //transform.position += Vector3.forward * speed * Time.deltaTime;
-            rb.AddForce(Vector3.forward, ForceMode.Acceleration);
+            //rb.AddForce(Vector3.forward, ForceMode.Acceleration);
         }
     }
     private void TurnLeft()
@@ -139,7 +135,7 @@ public class PlayerController : MonoBehaviour
     {
         if (hit.transform.tag == "Wall")
         {
-            rb.velocity = Vector3.zero;
+            
         }
     }
 
@@ -147,7 +143,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.transform.tag == "Wall")
         {
-            rb.gameObject.SetActive(true);
+            
         }
 
         if (collision.transform.tag == "IslandTrigger")
@@ -156,42 +152,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void StateHandler()
-    {
-        // Idle
-        if (rb.velocity == Vector3.zero)
-        {
-            state = MovementState.idle;
-        }
-        // Sailing
-        if (rb.velocity != Vector3.zero)
-        {
-            state = MovementState.sailing;
-        }
-        // TurningRight 
-        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D))) // TODO: better key selector
-        {
-            state = MovementState.turningRight;
-        }
-        // turningLeft
-        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)))
-        {
-            state = MovementState.turningLeft;
-        }
-        // driftingRight
-        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D)) && Input.GetKey(driftKey))
-        {
-            state = MovementState.driftingRight;
-        }
-        // driftingLeft
-        if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)) && Input.GetKey(driftKey))
-        {
-            state = MovementState.driftingLeft;
-        }
-        // Air mode??
-        //else
-        //{
-        //    state = MovementState.air;
-        //}
-    }
+    //private void StateHandler()
+    //{
+    //    // Idle
+    //    if (rb.velocity == Vector3.zero)
+    //    {
+    //        state = MovementState.idle;
+    //    }
+    //    // Sailing
+    //    if (rb.velocity != Vector3.zero)
+    //    {
+    //        state = MovementState.sailing;
+    //    }
+    //    // TurningRight 
+    //    if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D))) // TODO: better key selector
+    //    {
+    //        state = MovementState.turningRight;
+    //    }
+    //    // turningLeft
+    //    if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)))
+    //    {
+    //        state = MovementState.turningLeft;
+    //    }
+    //    // driftingRight
+    //    if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.D)) && Input.GetKey(driftKey))
+    //    {
+    //        state = MovementState.driftingRight;
+    //    }
+    //    // driftingLeft
+    //    if (rb.angularVelocity != Vector3.zero && (Input.GetKey(KeyCode.A)) && Input.GetKey(driftKey))
+    //    {
+    //        state = MovementState.driftingLeft;
+    //    }
+    //}
 }
