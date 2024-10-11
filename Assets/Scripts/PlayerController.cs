@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxSpeed;
     [SerializeField] float brakeSpeed;
     [SerializeField] MovementState state;
+    [SerializeField] Vector2 move;
     [SerializeField] enum MovementState
     {
         idle,
@@ -23,16 +25,6 @@ public class PlayerController : MonoBehaviour
         driftingLeft,
         air //?
     }
-    [SerializeField] PlayerInput playerInput;
-
-    [Header("Keys")]
-    [SerializeField] KeyCode driftKey = KeyCode.LeftShift;
-    [SerializeField] KeyCode brakeKey = KeyCode.Space;
-    [SerializeField] KeyCode forwardKey = KeyCode.W;
-    [SerializeField] KeyCode backKey = KeyCode.S;
-    [SerializeField] KeyCode leftKey = KeyCode.A;
-    [SerializeField] KeyCode rightKey = KeyCode.D;
-    [SerializeField] InputAction.CallbackContext action;
 
     private void Awake()
     {
@@ -41,116 +33,69 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        playerInput = GetComponent<PlayerInput>();
+        //playerInput = GetComponent<PlayerInput>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Controls(action);
-        Drift();
-        //Movement(action);
-        //StateHandler();
+        MovePlayer();
     }
 
-    public void Controls(InputAction.CallbackContext context)
+    public void Movement(InputAction.CallbackContext context)
     {
-        MovingVert(context);
+        move = context.ReadValue<Vector2>();
     }
 
-    private void MovingVert(InputAction.CallbackContext context)
+    private void MovePlayer()
     {
-        if (context.performed)
+        Vector3 movement = new Vector3(move.x, 0f, move.y);
+        if (movement != Vector3.zero)
         {
-            print("Moving performed");
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.05f);
         }
-        else if (context.started)
-        {
-            print("Moving started");
-        }
-        else if (context.canceled)
-        {
-            print("Moving canceled");
-        }
+        float aceleration = Mathf.Lerp(0, speed, 0.3f);
+        maxSpeed = aceleration;
+        transform.Translate(-movement * aceleration * Time.deltaTime, Space.World);
     }
 
-    //private void Movement(InputAction.CallbackContext context)
+    //private void Drift()
     //{
-    //    speed = 8 * Time.deltaTime;
-    //    if (context.performed)
+    //    if (Input.GetKey(driftKey))
     //    {
-    //        float move = context.action;
-    //        Vector3 positionNow = transform.position;
-    //        positionNow.x += move * speed;
-    //        transform.position = positionNow;
-    //        print("Moving performed");
+    //        rotationSpeed = rotationSpeedDrift;
+    //    }
+    //    else rotationSpeed = rotationSpeedDefault;
+    //}
+
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.transform.tag == "IslandTrigger")
+    //    {
+
     //    }
     //}
 
-    private void Backward()
-    {
-        if (Input.GetKey(backKey))
-        {
-            //добавить ускорение
-            //transform.position += Vector3.forward * speed * Time.deltaTime;
-            //rb.AddForce(Vector3.forward, ForceMode.Acceleration);
-        }
-    }
-    private void TurnLeft()
-    {
-        float rotation = -1;
-        if (Input.GetKey(leftKey))
-        {
-            transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation * rotationSpeed * Time.deltaTime, Mathf.Clamp(transform.rotation.z, -10f, 10f));
-        }
-    }
-    
-    private void TurnRight()
-    {
-        float rotation = 1;
-        if (Input.GetKey(rightKey))
-        {
-            transform.Rotate(Mathf.Clamp(transform.rotation.x, -10f, 10f), rotation * rotationSpeed * Time.deltaTime, Mathf.Clamp(transform.rotation.z, -10f, 10f));
-        }
-    }
-
-    private void Drift()
-    {
-        if (Input.GetKey(driftKey))
-        {
-            rotationSpeed = rotationSpeedDrift;
-        }
-        else rotationSpeed = rotationSpeedDefault;
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag == "IslandTrigger")
-        {
-
-        }
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.transform.tag == "Wall")
-        {
+    //private void OnControllerColliderHit(ControllerColliderHit hit)
+    //{
+    //    if (hit.transform.tag == "Wall")
+    //    {
             
-        }
-    }
+    //    }
+    //}
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.tag == "Wall")
-        {
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.transform.tag == "Wall")
+    //    {
             
-        }
+    //    }
 
-        if (collision.transform.tag == "IslandTrigger")
-        {
+    //    if (collision.transform.tag == "IslandTrigger")
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
     //private void StateHandler()
     //{
