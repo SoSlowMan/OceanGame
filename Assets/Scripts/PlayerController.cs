@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.05f);
         }
-        float aceleration = Mathf.Lerp(0, speed, 0.3f);
+        float aceleration = Mathf.Lerp(0, speed, 0.3f); // TODO: fix
         maxSpeed = aceleration;
         transform.Translate(-movement * aceleration * Time.deltaTime, Space.World);
     }

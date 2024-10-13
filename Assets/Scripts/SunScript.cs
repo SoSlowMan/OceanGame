@@ -33,7 +33,7 @@ public class SunScript : MonoBehaviour
 
         if (speedSun >= 1f)
         {
-            Debug.Log("Drop");
+            //Debug.Log("Drop");
             speedSun = 0f;
             currentColorIndex = nextColorIndex;
             nextColorIndex++;
