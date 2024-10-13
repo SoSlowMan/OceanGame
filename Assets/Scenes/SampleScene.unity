@@ -8455,14 +8455,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e52d1678b0a7a44a8a120f3f913ee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 60
-  rotationSpeedDefault: 60
-  rotationSpeedDrift: 120
+  rotationSpeedDefault: 0.15
   speed: 10
-  maxSpeed: 20
-  brakeSpeed: 0
   state: 0
-  move: {x: 0, y: 0}
+  isPC: 1
 --- !u!95 &3469287837088436023
 Animator:
   serializedVersion: 5
@@ -8513,7 +8509,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3469287837088436022}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Movement
+        m_MethodName: KeyboardMovement
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8525,6 +8521,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 79385ac8-c756-4dd7-8b68-b21954de8198
     m_ActionName: Gameplay/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3469287837088436022}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: MouseLookMovement
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0cf14beb-a4ca-40aa-960f-87c08d8d337a
+    m_ActionName: Gameplay/MouseLook[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3469287837088436022}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: GamepadMovement
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: db7c9ad0-c975-4ae3-aded-40a0b38d65ed
+    m_ActionName: Gameplay/GamepadLook
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
