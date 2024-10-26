@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "codes.aureola.simplejson": {
-      "version": "file:D:/Work/SimpleJSON-Unity-master",
+      "version": "file:SimpleJSON-Unity-master",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {}
     },
     "com.unity.burst": {
