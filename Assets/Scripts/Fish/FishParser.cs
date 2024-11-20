@@ -12,7 +12,7 @@ public class FishParser : MonoBehaviour
     {
         _path = Application.streamingAssetsPath + "/" + "Fish.json";
         _jsonObj = JSON.Parse(File.ReadAllText(_path));
-        Debug.Log(_jsonObj[0][0][0]);
+        //Debug.Log(_jsonObj[0][0][0]);
         material.color = new Color32(_jsonObj[0][1][1], _jsonObj[0][1][2], _jsonObj[0][1][3], 255);
         // TODO: change the list of colors in JSON to a list of materials from assets
         //Coloring();

@@ -131,34 +131,34 @@ public class PlayerController : MonoBehaviour
     //    else rotationSpeed = rotationSpeedDefault;
     //}
 
-    //void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.transform.tag == "IslandTrigger")
-    //    {
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "IslandTrigger")
+        {
+            transform.Translate(new Vector3(0f,0f,0f));
+        }
+    }
 
-    //    }
-    //}
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.transform.tag == "Wall")
+        {
 
-    //private void OnControllerColliderHit(ControllerColliderHit hit)
-    //{
-    //    if (hit.transform.tag == "Wall")
-    //    {
-            
-    //    }
-    //}
+        }
+    }
 
-    //private void OnCollisionExit(Collision collision)
-    //{
-    //    if (collision.transform.tag == "Wall")
-    //    {
-            
-    //    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.tag == "Wall")
+        {
 
-    //    if (collision.transform.tag == "IslandTrigger")
-    //    {
+        }
 
-    //    }
-    //}
+        if (collision.transform.tag == "IslandTrigger")
+        {
+
+        }
+    }
 
     //private void StateHandler()
     //{
